@@ -36,6 +36,7 @@
 #include "audio/audio_effect.h"
 #include "audio/audio_stream.h"
 #include "audio/effects/audio_effect_amplify.h"
+#include "audio/effects/audio_effect_bitcrush.h"
 #include "audio/effects/audio_effect_capture.h"
 #include "audio/effects/audio_effect_chorus.h"
 #include "audio/effects/audio_effect_compressor.h"
@@ -195,6 +196,8 @@ void register_server_types() {
 	{
 		//audio effects
 		GDREGISTER_CLASS(AudioEffectAmplify);
+
+		GDREGISTER_CLASS(AudioEffectBitcrush);
 
 		GDREGISTER_CLASS(AudioEffectReverb);
 
