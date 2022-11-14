@@ -57,17 +57,11 @@ protected:
 
 public:
 	float rate;
-	float noise;
-	float noise_width;
 	float mix;
 
 	Ref<AudioEffectInstance> instantiate() override;
 	void set_rate(float p_rate);
 	float get_rate() const;
-	void set_noise(float p_noise);
-	float get_noise() const;
-	void set_noise_width(float p_noise_width);
-	float get_noise_width() const;
 	void set_mix(float p_mix);
 	float get_mix() const;
 
