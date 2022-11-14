@@ -1,5 +1,5 @@
 /*************************************************************************/
-/*  audio_effect_bitcrush.h                                                */
+/*  audio_effect_sample_rate.h                                                */
 /*************************************************************************/
 /*                       This file is part of:                           */
 /*                           GODOT ENGINE                                */
@@ -28,50 +28,50 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#ifndef AUDIO_EFFECT_BITCRUSH_H
-#define AUDIO_EFFECT_BITCRUSH_H
+#ifndef AUDIO_EFFECT_SAMPLE_RATE_H
+#define AUDIO_EFFECT_SAMPLE_RATE_H
 
 #include "servers/audio/audio_effect.h"
 
-class AudioEffectBitcrush;
+class AudioEffectSampleRate;
 
-class AudioEffectBitcrushInstance : public AudioEffectInstance {
-	GDCLASS(AudioEffectBitcrushInstance, AudioEffectInstance);
-	friend class AudioEffectBitcrush;
-	Ref<AudioEffectBitcrush> base;
+class AudioEffectSampleRateInstance : public AudioEffectInstance {
+	GDCLASS(AudioEffectSampleRateInstance, AudioEffectInstance);
+	friend class AudioEffectSampleRate;
+	Ref<AudioEffectSampleRate> base;
+
+	float processed_frames = 0;
+	AudioFrame last_sampled_frame;
 
 public:
 	virtual void process(const AudioFrame *p_src_frames, AudioFrame *p_dst_frames, int p_frame_count) override;
 };
 
-class AudioEffectBitcrush : public AudioEffect {
-	GDCLASS(AudioEffectBitcrush, AudioEffect);
+class AudioEffectSampleRate : public AudioEffect {
+	GDCLASS(AudioEffectSampleRate, AudioEffect);
 
-	friend class AudioEffectBitcrushInstance;
-
-	float depth;
-	int rate;
-	float dry;
-	float wet;
-
-	float remaining_samples;
-	float last_sampled_values[2];
+	friend class AudioEffectSampleRateInstance;
 
 protected:
 	static void _bind_methods();
 
 public:
-	Ref<AudioEffectInstance> instantiate() override;
-	void set_depth(float p_depth);
-	float get_depth() const;
-	void set_rate(int p_rate);
-	int get_rate() const;
-	void set_dry(float p_dry);
-	float get_dry() const;
-	void set_wet(float p_wet);
-	float get_wet() const;
+	float rate;
+	float noise;
+	float noise_width;
+	float mix;
 
-	AudioEffectBitcrush();
+	Ref<AudioEffectInstance> instantiate() override;
+	void set_rate(float p_rate);
+	float get_rate() const;
+	void set_noise(float p_noise);
+	float get_noise() const;
+	void set_noise_width(float p_noise_width);
+	float get_noise_width() const;
+	void set_mix(float p_mix);
+	float get_mix() const;
+
+	AudioEffectSampleRate();
 };
 
-#endif // AUDIO_EFFECT_BITCRUSH_H
+#endif // AUDIO_EFFECT_SAMPLE_RATE_H
