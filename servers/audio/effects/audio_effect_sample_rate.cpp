@@ -36,12 +36,14 @@ void AudioEffectSampleRateInstance::process(const AudioFrame *p_src_frames, Audi
 	float frames_until_next_sample = AudioServer::get_singleton()->get_mix_rate() / base->rate;
 
 	for (int i = 0; i < p_frame_count; i++) {
-		
+
+		// sample a new frame once `processed_frames` increments to reach `frames_until_next_sample`
 		if (processed_frames >= frames_until_next_sample) {
 			last_sampled_frame = p_src_frames[i];
-			processed_frames = fmod(processed_frames - frames_until_next_sample, 1.0f);
+			processed_frames = fmod(processed_frames - frames_until_next_sample, 1.0f); // reset `processed_frames`, preserving decimal remainder
 		}
 
+		// output `last_sampled_frame` mixed with the original signal
 		p_dst_frames[i] = last_sampled_frame * base->mix + p_src_frames[i] * (1.0f - base->mix);
 
 		processed_frames++;
@@ -56,17 +58,17 @@ Ref<AudioEffectInstance> AudioEffectSampleRate::instantiate() {
 }
 
 void AudioEffectSampleRate::set_rate(float p_rate) {
-	rate = p_rate;
+	rate = MAX(p_rate, 1.0f);
 }
 float AudioEffectSampleRate::get_rate() const {
 	return rate;
 }
 
 void AudioEffectSampleRate::set_mix(float p_mix) {
-	mix = p_mix / 100.0f;
+	mix = CLAMP(p_mix, 0.0f, 1.0f);
 }
 float AudioEffectSampleRate::get_mix() const {
-	return mix * 100.0f;
+	return mix;
 }
 
 void AudioEffectSampleRate::_bind_methods() {
@@ -77,8 +79,8 @@ void AudioEffectSampleRate::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_mix", "mix"), &AudioEffectSampleRate::set_mix);
 	ClassDB::bind_method(D_METHOD("get_mix"), &AudioEffectSampleRate::get_mix);
 
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "rate", PROPERTY_HINT_RANGE, "1.0,22050.0,0.1,or_greater,suffix:Hz"), "set_rate", "get_rate");
-	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "mix", PROPERTY_HINT_RANGE, "0.0,100.0,0.1,suffix:%"), "set_mix", "get_mix");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "rate", PROPERTY_HINT_RANGE, "1.0,22050.0,1.0,or_greater,hide_slider,suffix:Hz"), "set_rate", "get_rate");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "mix", PROPERTY_HINT_RANGE, "0.0,1.0,0.01"), "set_mix", "get_mix");
 }
 
 AudioEffectSampleRate::AudioEffectSampleRate() {
