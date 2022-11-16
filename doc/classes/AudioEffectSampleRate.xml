@@ -2,7 +2,6 @@
 <class name="AudioEffectSampleRate" inherits="AudioEffect" version="4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../class.xsd">
 	<brief_description>
 		Adds a sample rate audio effect to an Audio bus.
-		Resamples the original audio signal at a new sample rate.
 	</brief_description>
 	<description>
 		Resamples the input audio signal at a new sample rate. Aliasing artifacts are produced in the resulting signal, since no interpolation is applied.
